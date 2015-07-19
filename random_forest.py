@@ -5,6 +5,14 @@ import re
 import nltk
 #nltk.download()
 from nltk.corpus import stopwords # Import the stop word list
+# NOTE: This code requires version 0.16.1 of sklearn.  
+# In older versions of sklearn, train_test_split returns a numpy array even if you give it a dataframe.
+# To check your version of sklearn:
+#     import sklearn
+#     sklearn.__version__ 
+# Be careful if you update your version of scikit-learn.
+# If you installed the Anaconda Python distribution, then use the conda package manager (don't use pip!)
+#      conda update scikit-learn
 from sklearn.cross_validation import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.ensemble import RandomForestClassifier
@@ -96,13 +104,13 @@ def rand_forest_predict(data,text_var,target_var,
     return output
 
 if __name__=="__main__":
-    EP = pd.read_csv("EP_data.csv", header=0).dropna()
+    EP = pd.read_csv("/Users/dharshid/CDIPS_Project/data/EP_data.csv", header=0).dropna()
     target = 'gender'
     ntrain = 3000
     ntest = 3000
     result = rand_forest_predict(EP,'content',target,
                    ntrain,ntest,nfeature=1000,nestimator=50)
-    print "The proportion of correct prediction for ",target, " is ", round(sum(result['Prediction']==result['True Value']),2)/test_size
+    print "The proportion of correct prediction for ",target, " is ", round(sum(result['Prediction']==result['True Value']),2)/ntest
  
 
 
