@@ -1,3 +1,4 @@
+#data0 <- read.csv("EP_with_age.csv",header=T)
 data <- data0
 data$uid <- NA
 data1 <- data.frame(matrix(nrow=0,ncol=19))
