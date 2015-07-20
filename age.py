@@ -78,7 +78,7 @@ if __name__ == "__main__":
     legitAgeList = [] 
 
     # CHANGE THIS TO YOUR LOCATION OF THE DATA FILE
-    dataFilePath = "/Users/dharshid/CDIPS_Project/data/EP_data.csv"
+    dataFilePath = "../EP_data.csv"
     import pandas as pd
     EPData = pd.read_csv(dataFilePath)
     
@@ -105,6 +105,8 @@ if __name__ == "__main__":
     # If you run this code in iPython Notebook, uncomment next line or matplotlib won't plot within iPython Notebook
     # %matplotlib inline
     drawHistogram(np.array(legitAgeList))
+    EPData['age'] = allAgeList
+    EPData.to_csv("../EP_with_age.csv")
 
 
 
