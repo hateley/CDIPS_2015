@@ -69,6 +69,6 @@ if __name__ == '__main__':
     plt.show()
     
     # Sort the bin size by their F score
-    sorted_result = zip(grouping_result[0],grouping_result[1])
-    for bin_size, F in sorted(sorted_result, key=lambda sorted_result:sorted_result[1],reverse=True):
-    print bin_size, F
+    # sorted_result = zip(grouping_result[0],grouping_result[1])
+	#for bin_size, F in sorted(sorted_result, key=lambda sorted_result:sorted_result[1],reverse=True):
+    	#print bin_size, F
