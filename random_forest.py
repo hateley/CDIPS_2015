@@ -63,7 +63,11 @@ def text_feature(data,text_var,nfeature):
                              max_features = nfeature) 
     data_features = vectorizer.fit_transform(clean_statuses)
     data_features = data_features.toarray()
-    return data_features
+    vocab = vectorizer.get_feature_names() 
+    # Sum up the counts of each vocabulary word
+    counts = np.sum(data_features, axis=0)
+
+    return {'features':data_features,'word':vocab,'counts':counts}
 
 
 def rand_forest_predict(data,text_var,target_var,
@@ -74,7 +78,7 @@ def rand_forest_predict(data,text_var,target_var,
     
     # Calculate text features for the training set
     print "Cleaning and parsing train statuses...\n"
-    train_features = text_feature(data_train,text_var,nfeature)
+    train_features = text_feature(data_train,text_var,nfeature)['features']
     
     # Fit the training set features to a random forest
     forest = RandomForestClassifier(n_estimators = nestimator) 
