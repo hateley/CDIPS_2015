@@ -25,21 +25,23 @@ def age_grouping(age,data,var_target,bin_max,age_range):
     # Create a list to contain the F statistics for the given sequence of bin size
     support = [] 
     
-    for bin in bin_seq:
-        age_group = (np.array(Data['age'])-age_range[0])/bin
-        # if bin is 5, age groups will be 13 - 17, 18 -22, 23-27,...; 
-        # if bin is 10, age groups will be 13 - 22, 23- 32, 33 - 42,...
+    for bin_size in bin_seq:
+        age_group = (np.array(Data['age'])-age_range[0])/bin_size
+        # if bin_size is 5, age groups will be 13 - 17, 18 -22, 23-27,...; 
+        # if bin_size is 10, age groups will be 13 - 22, 23- 32, 33 - 42,...
         Data['age_group'] = age_group
-        print set(age_group)
         # Calculate F statistic using ordinary least square method
-        formula = var_target + '~ C(age_group)'
-        lm = ols(formula, data=Data).fit()
-        support.append(lm.fvalue)
-        print "bin size = ", bin, "F = ",lm.fvalue
+        lF = 0
+        ## Add up the log transformed (more readable) F statistic for all target variables
+        for target in var_target:
+            formula = target + '~ C(age_group)'
+            lm = ols(formula, data=Data).fit()
+            lF = lF + np.log(lm.fvalue)
         
-    # Order the bin size by their F statistic (from the highest to the lowest)
-    result = zip(bin_seq,support)
-    return result
+        support.append(lF)
+        print "bin size = ", bin_size, "log(F) = ",lF
+        
+    return bin_seq,support
 
 if __name__ == '__main__':
     # Read in data from the directory where you keep it
@@ -48,11 +50,25 @@ if __name__ == '__main__':
     # so I am reading it directly from the data.
     # If you haven't done so you need to calculate it first (refer to age.py).
     age = EPData['age']
-    var_target = 'num_friends'
+    
+    # var_target specifies a list of variables we want to maximize the F statistics for. 
+    var_target = ['num_friends','num_groups']
+    # You can use all available numeric variables but it's slow:
+    # var_target = ['num_friends','num_fans','num_groups','num_logins','votes','num_comments']
+    
+    # The maximal bin size in years
     bin_max = 20
-    age_max = 80
-    grouping_result = age_grouping(age,EPData,var_target,bin_max,age_max)
-    for bin, F in sorted(group_result, key=lambda group_result:group_result[1],reverse=True):
-    print bin, F
-    plt.plot(grouping_result['bin'],grouping_result['F'])
+    # The range of reasonable age to be taken into calculation
+    age_range = [13,80]
+    grouping_result = age_grouping(age,EPData,var_target,bin_max,age_range)    
+
+    # Plot log(F) against the bin size
+    plt.plot(grouping_result[0],grouping_result[1])
+    plt.xlabel('bin size')
+    plt.ylabel('log(F)')
     plt.show()
+    
+    # Sort the bin size by their F score
+    # sorted_result = zip(grouping_result[0],grouping_result[1])
+	#for bin_size, F in sorted(sorted_result, key=lambda sorted_result:sorted_result[1],reverse=True):
+    	#print bin_size, F
