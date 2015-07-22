@@ -31,7 +31,8 @@ def status_to_words(raw_status):
     #Remove a few more trivial words not identified by NLTK
     stops = stops.union([u'hasn',u'm',u've',u'll',u're',u'didn',u'us',
                          u'im',u'doesn',u'couldn',u'won',u'isn',u'http',
-                         u'www']) 
+                         u'www',u'like',u'one',u'would',u'get',u'want',
+                         u'really',u'could',u'even',u'much',u'make',u'good']) 
     # 
     # 5. Remove stop words
     meaningful_words = [w for w in words if not w in stops]   
@@ -40,7 +41,7 @@ def status_to_words(raw_status):
     # and return the result.
     return( " ".join( meaningful_words ))
 
-def text_feature(data,text_var,nfeature):
+def text_feature(data,text_var,nfeature,silence=False):
     """Calculate the text features for the given data.
     text_var specifies the name of the column that contains the text.
     nfeature specifies the max number of features to be extracted 
@@ -50,7 +51,7 @@ def text_feature(data,text_var,nfeature):
     nitem = data.shape[0]
     data.index=range(nitem)
     for i in xrange( 0, nitem):
-        if( (i+1)%1000 == 0 ):
+        if (i+1)%1000 == 0 and not silence:
             print "Status %d of %d\n" % ( i+1, nitem)                                                                    
         clean_statuses.append( status_to_words(data[text_var][i]))
     
