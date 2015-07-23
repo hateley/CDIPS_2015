@@ -9,7 +9,7 @@ while(dim(data)[1]>0){
 	data1 <- rbind(data1,data[indice,])
 	data <- data[!indice,]
 	if(id%%10==0){
-		print(paste("%",round(100*dim(data1)[1]/dim(data)[1])))
+		print(paste("%",round(100*dim(data1)[1]/(dim(data1)[1]+dim(data)[1]))))
 	}
 	id <- id + 1
 }
