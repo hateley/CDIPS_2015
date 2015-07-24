@@ -17,7 +17,7 @@ from sklearn.cross_validation import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.ensemble import RandomForestClassifier
 
-def status_to_words(raw_status):
+def status_to_words(raw_status,noun=False):
     # Function to convert a raw status to a string of words
     # The input is a single string (a raw status update), and 
     # the output is a single string (a preprocessed status update)
@@ -39,16 +39,24 @@ def status_to_words(raw_status):
     #Remove a few more trivial words not identified by NLTK
     stops = stops.union([u'hasn',u'm',u've',u'll',u're',u'didn',u'us',
                          u'im',u'doesn',u'couldn',u'won',u'isn',u'http',
-                         u'www']) 
+                         u'www',u'like',u'one',u'would',u'get',u'want',
+                         u'really',u'could',u'even',u'much',u'make',u'good']) 
     # 
     # 5. Remove stop words
-    meaningful_words = [w for w in words if not w in stops]   
-    #
-    # 6. Join the words back into one string separated by space, 
-    # and return the result.
-    return( " ".join( meaningful_words ))
+    meaningful_words = [w for w in words if not w in stops]
+    result = " ".join( meaningful_words )
+    
+    # 6. if noun option is true, extract only nouns
+    if noun:
+        tokens = nltk.word_tokenize(result)
+        tagged = nltk.pos_tag(tokens)
+        nouns = [word for word,pos in tagged\
+                 if (pos == 'NN' or pos == 'NNP' or pos == 'NNS' or pos == 'NNPS')]
+        result = " ".join(nouns)
+    
+    return(result)
 
-def text_feature(data,text_var,nfeature):
+def text_feature(data,text_var,nfeature,noun=False,silence=False):
     """Calculate the text features for the given data.
     text_var specifies the name of the column that contains the text.
     nfeature specifies the max number of features to be extracted 
@@ -58,9 +66,9 @@ def text_feature(data,text_var,nfeature):
     nitem = data.shape[0]
     data.index=range(nitem)
     for i in xrange( 0, nitem):
-        if( (i+1)%1000 == 0 ):
+        if (i+1)%1000 == 0 and not silence:
             print "Status %d of %d\n" % ( i+1, nitem)                                                                    
-        clean_statuses.append( status_to_words(data[text_var][i]))
+        clean_statuses.append( status_to_words(data[text_var][i],noun))
     
     # Then extract features from the cleaned text
     print "Creating the bag of words...\n"
@@ -71,7 +79,11 @@ def text_feature(data,text_var,nfeature):
                              max_features = nfeature) 
     data_features = vectorizer.fit_transform(clean_statuses)
     data_features = data_features.toarray()
-    return data_features
+    vocab = vectorizer.get_feature_names() 
+    # Sum up the counts of each vocabulary word
+    counts = np.sum(data_features, axis=0)
+
+    return {'features':data_features,'word':vocab,'counts':counts}
 
 
 def rand_forest_predict(data,text_var,target_var,
@@ -82,7 +94,7 @@ def rand_forest_predict(data,text_var,target_var,
     
     # Calculate text features for the training set
     print "Cleaning and parsing train statuses...\n"
-    train_features = text_feature(data_train,text_var,nfeature)
+    train_features = text_feature(data_train,text_var,nfeature)['features']
     
     # Fit the training set features to a random forest
     forest = RandomForestClassifier(n_estimators = nestimator) 
