@@ -9,7 +9,7 @@ from sklearn.cross_validation import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.ensemble import RandomForestClassifier
 
-def status_to_words(raw_status):
+def status_to_words(raw_status,noun=False):
     # Function to convert a raw status to a string of words
     # The input is a single string (a raw status update), and 
     # the output is a single string (a preprocessed status update)
@@ -35,13 +35,20 @@ def status_to_words(raw_status):
                          u'really',u'could',u'even',u'much',u'make',u'good']) 
     # 
     # 5. Remove stop words
-    meaningful_words = [w for w in words if not w in stops]   
-    #
-    # 6. Join the words back into one string separated by space, 
-    # and return the result.
-    return( " ".join( meaningful_words ))
+    meaningful_words = [w for w in words if not w in stops]
+    result = " ".join( meaningful_words )
+    
+    # 6. if noun option is true, extract only nouns
+    if noun:
+        tokens = nltk.word_tokenize(result)
+        tagged = nltk.pos_tag(tokens)
+        nouns = [word for word,pos in tagged\
+                 if (pos == 'NN' or pos == 'NNP' or pos == 'NNS' or pos == 'NNPS')]
+        result = " ".join(nouns)
+    
+    return(result)
 
-def text_feature(data,text_var,nfeature,silence=False):
+def text_feature(data,text_var,nfeature,noun=False,silence=False):
     """Calculate the text features for the given data.
     text_var specifies the name of the column that contains the text.
     nfeature specifies the max number of features to be extracted 
@@ -53,7 +60,7 @@ def text_feature(data,text_var,nfeature,silence=False):
     for i in xrange( 0, nitem):
         if (i+1)%1000 == 0 and not silence:
             print "Status %d of %d\n" % ( i+1, nitem)                                                                    
-        clean_statuses.append( status_to_words(data[text_var][i]))
+        clean_statuses.append( status_to_words(data[text_var][i],noun))
     
     # Then extract features from the cleaned text
     print "Creating the bag of words...\n"
