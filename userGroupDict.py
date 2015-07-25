@@ -4,6 +4,7 @@ import sys
 # See http://stackoverflow.com/questions/28983608/how-to-create-a-pandas-dataframe-containing-columns-with-special-characters  for further explanation
 reload(sys)
 sys.setdefaultencoding('utf-8') 
+import numpy as np
 
 def makeUserGroupDict(data, uidCol, gidCol):
     print "starting function"
@@ -35,6 +36,25 @@ def makeUserGroupDict(data, uidCol, gidCol):
     print "Total number of unique groups is ", len(set(groupList))
             
     return userDict
+
+def makeUserGroupMatrix(userGroupDict, groupList):
+    # First make a dictionary to relate group ids to the index in the groupList
+    groupIndexDict = {}
+    for i in range(0,len(groupList)):
+        groupIndexDict[groupList[i]] = i   
+    
+    nGroups = len(groupList)
+    userList = userGroupDict.keys()
+    nUsers = len(userList)
+    userGroupMatrix = np.zeros((nUsers,nGroups),dtype=np.int)
+    for i in range(0,nUsers):
+        ukey = userList[i]
+        for gkey in userGroupDict[ukey]:
+            nPosts = userGroupDict[ukey][gkey]
+            userGroupMatrix.itemset((i,groupIndexDict[gkey]),nPosts)
+            
+    return (userGroupMatrix, userList)
+        
     
 if __name__ == "__main__":
     import pandas as pd
@@ -45,7 +65,7 @@ if __name__ == "__main__":
     gidCol = 14 # column number for gid column
     uidCol = 20 # column number for uid column
     goodDataSorted = goodData.sort(columns = 'uid')
-    goodDataSubset = goodDataSorted.iloc[0:5000,:]
+    goodDataSubset = goodDataSorted.iloc[0:100,:]
     userDict = makeUserGroupDict(goodDataSubset, 20, 14)
     
     # check that userDict contains the same number of data points as goodDataSubset
@@ -63,4 +83,5 @@ if __name__ == "__main__":
     print "Number of users is ", len(userDict)
     
     print "Average number of groups per users ", totalGroups/float(len(userDict))
+    
     
