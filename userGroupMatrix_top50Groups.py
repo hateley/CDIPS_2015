@@ -28,6 +28,6 @@ if __name__ == "__main__":
     
     (userGroupMat, userList) = userGroupMatrix.makeUserGroupMatrix(topGroupSubset, nUsers, top50Groups, uidColNum, gidColNum)
     
-    np.savetxt("testMatrix.txt", userGroupMat, fmt="%d")
+    np.savetxt("userGroupMatrix_top50Groups.txt", userGroupMat, fmt="%d")
     
     print "Number of users is ", nUsers
