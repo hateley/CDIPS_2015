@@ -37,10 +37,10 @@ def status_to_words(raw_status,noun=False):
     #   a list, so convert the stop words to a set
     stops = set(stopwords.words("english"))
     #Remove a few more trivial words not identified by NLTK
-    stops = stops.union([u'hasn',u'm',u've',u'll',u're',u'didn',u'us',
-                         u'im',u'doesn',u'couldn',u'won',u'isn',u'http',
-                         u'www',u'like',u'one',u'would',u'get',u'want',
-                         u'really',u'could',u'even',u'much',u'make',u'good']) 
+    #stops = stops.union([u'hasn',u'm',u've',u'll',u're',u'didn',u'us',
+     #                    u'im',u'doesn',u'couldn',u'won',u'isn',u'http',
+        #                   u'www',u'like',u'one',u'would',u'get',u'want',
+        #                 u'really',u'could',u'even',u'much',u'make',u'good']) 
     # 
     # 5. Remove stop words
     meaningful_words = [w for w in words if not w in stops]
