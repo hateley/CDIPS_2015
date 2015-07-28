@@ -116,7 +116,7 @@ def rand_forest_predict(data,text_var,target_var,
     return output
 
 if __name__=="__main__":
-    EP = pd.read_csv("EP_data.csv", header=0).dropna()
+    EP = pd.read_csv("/Users/dharshid/CDIPS_Project/data/EP_data.csv", header=0).dropna()
     target = 'gender'
     ntrain = 3000
     ntest = 3000
