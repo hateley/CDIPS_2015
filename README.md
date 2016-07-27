@@ -2,15 +2,15 @@
 
 ### Summer group research project with mentor Adam Kalman from Kanjoya.
 
-This project is the result of my participation in UC Berkeley's Career Development Initiative for the Physical Sciences (CDIPS) grad student-organized summer data science workshop.
+This project is the result of my participation in UC Berkeley's Career Development Initiative for the Physical Sciences (CDIPS) [grad student-organized summer data science workshop.](http://cdips.physics.berkeley.edu/2015-cdips-data-science-workshop/)
 
-The annual 3 week workshop pairs tech mentors with a small groups of students to work on real industry data science projects. It's a great opportunity for PhDs transitioning into tech to learn the tools of the trade, visit work spaces, and connect with field experts. 
+The annual 3 week workshop pairs tech mentors with a small groups of students to work on real industry data science projects. It's a great opportunity for PhDs transitioning into tech to learn the tools of the trade, visit work spaces, and connect with experts. 
 
 ### Our Group
 * Leader: Adam Kalman, Lead Data Scientist at Kanjoya
 * Team: Jade Zhang, Kevin Pollock, Dharshi Devendran, and Shannon Hateley
 
-### Our dataset:
+### Our dataset
 Every post from Jan-July 2015 (534,305 entries) from the **experience project**,
 a social network where users annonymously share life experiences and personal stories.
 
